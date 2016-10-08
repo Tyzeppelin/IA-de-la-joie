@@ -124,43 +124,93 @@ public class Board implements Cloneable {
     			}
     		}
     	}
-		
+		Board b1 = this.clone();
+		Board b2 = this.clone();
 		if(zeroLine == 0){
 			if(zeroCol == 0) {
-				Board b1 = this.clone();
-				Board b2 = this.clone();
-				b1.blocks[0][0] = this.blocks[0][1];
-				b1.blocks[0][1] = this.blocks[0][0];
-				b2.blocks[0][0] = this.blocks[1][0];
-				b2.blocks[1][0] = this.blocks[0][0];
-				returnList.add(b1);
-				returnList.add(b2);
+				// 0, 0
+				b1.switchRight(zeroLine, zeroCol);
+				b2.switchBottom(zeroLine, zeroCol);
 			} else if (zeroCol == N-1) {
-				Board b1 = this.clone();
-				Board b2 = this.clone();
-				b1.blocks[0][N-1] = this.blocks[0][N-2];
-				b1.blocks[0][N-2] = this.blocks[0][N-1];
-				b2.blocks[0][N-1] = this.blocks[1][N-1];
-				b2.blocks[1][N-1] = this.blocks[0][N-1];
-				returnList.add(b1);
-				returnList.add(b2);
+				// 0, N-1
+				b1.switchLeft(zeroLine, zeroCol);
+				b2.switchBottom(zeroLine, zeroCol);
 			} else {
-				Board b1 = this.clone();
-				Board b2 = this.clone();
+				// 0, X
 				Board b3 = this.clone();
-				b1.blocks[0][zeroCol] = this.blocks[0][zeroCol-1];
-				b1.blocks[0][zeroCol-1] = this.blocks[0][zeroCol];
-				b2.blocks[0][zeroCol] = this.blocks[1][zeroCol];
-				b2.blocks[1][zeroCol] = this.blocks[0][zeroCol];
-				b3.blocks[0][zeroCol] = this.blocks[0][zeroCol+1];
-				b3.blocks[0][zeroCol+1] = this.blocks[0][zeroCol];
-				returnList.add(b1);
-				returnList.add(b2);
+				b1.switchLeft(zeroLine, zeroCol);
+				b2.switchRight(zeroLine, zeroCol);
+				b3.switchBottom(zeroLine, zeroCol);
 				returnList.add(b3);
 			}
+		} else if (zeroLine == N-1) {
+			if(zeroCol == 0) {
+				// N-1, 0
+				b1.switchRight(zeroLine, zeroCol);
+				b2.switchTop(zeroLine, zeroCol);
+			} else if (zeroCol == N-1) {
+				// N-1, N-1
+				b1.switchLeft(zeroLine, zeroCol);
+				b2.switchTop(zeroLine, zeroCol);
+			} else {
+				// N-1, X
+				Board b3 = this.clone();
+				b1.switchLeft(zeroLine, zeroCol);
+				b2.switchRight(zeroLine, zeroCol);
+				b3.switchTop(zeroLine, zeroCol);
+				returnList.add(b3);
+			}
+		} else {
+			Board b3 = this.clone();
+			if(zeroCol == 0) {
+				// X, 0
+				b1.switchRight(zeroLine, zeroCol);
+				b2.switchBottom(zeroLine, zeroCol);
+				b3.switchTop(zeroLine, zeroCol);
+			} else if (zeroCol == N-1) {
+				// X, N-1
+				b1.switchLeft(zeroLine, zeroCol);
+				b2.switchBottom(zeroLine, zeroCol);
+				b3.switchTop(zeroLine, zeroCol);
+			} else {
+				// X, X
+				Board b4 = this.clone();
+				b1.switchLeft(zeroLine, zeroCol);
+				b2.switchRight(zeroLine, zeroCol);
+				b3.switchBottom(zeroLine, zeroCol);
+				b4.switchTop(zeroLine, zeroCol);
+				returnList.add(b4);
+			}
+			returnList.add(b3);
 		}
+		returnList.add(b1);
+		returnList.add(b2);
         return returnList;
     }
+	
+	private void switchLeft(int line, int col) {
+		int temp = this.blocks[line][col];
+		this.blocks[line][col] = this.blocks[line-1][col];
+		this.blocks[line-1][col] = temp;
+	}
+	
+	private void switchRight(int line, int col) {
+		int temp = this.blocks[line][col];
+		this.blocks[line][col] = this.blocks[line+1][col];
+		this.blocks[line+1][col] = temp;
+	}
+	
+	private void switchTop(int line, int col) {
+		int temp = this.blocks[line][col];
+		this.blocks[line][col] = this.blocks[line][col-1];
+		this.blocks[line][col-1] = temp;
+	}
+	
+	private void switchBottom(int line, int col) {
+		int temp = this.blocks[line][col];
+		this.blocks[line][col] = this.blocks[line][col+1];
+		this.blocks[line][col+1] = temp;
+	}
 
     public String toString() {
         StringBuilder s = new StringBuilder();
