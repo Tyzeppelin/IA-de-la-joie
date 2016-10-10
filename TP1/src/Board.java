@@ -124,67 +124,42 @@ public class Board implements Cloneable {
     			}
     		}
     	}
-		Board b1 = this.clone();
-		Board b2 = this.clone();
 		if(zeroLine == 0){
-			if(zeroCol == 0) {
-				// 0, 0
-				b1.switchRight(zeroLine, zeroCol);
-				b2.switchBottom(zeroLine, zeroCol);
-			} else if (zeroCol == N-1) {
-				// 0, N-1
-				b1.switchLeft(zeroLine, zeroCol);
-				b2.switchBottom(zeroLine, zeroCol);
-			} else {
-				// 0, X
-				Board b3 = this.clone();
-				b1.switchLeft(zeroLine, zeroCol);
-				b2.switchRight(zeroLine, zeroCol);
-				b3.switchBottom(zeroLine, zeroCol);
-				returnList.add(b3);
-			}
+			// si on est sur la ligne du haut
+			Board b = this.clone();
+			b.switchBottom(zeroLine, zeroCol);
+			returnList.add(b);
 		} else if (zeroLine == N-1) {
-			if(zeroCol == 0) {
-				// N-1, 0
-				b1.switchRight(zeroLine, zeroCol);
-				b2.switchTop(zeroLine, zeroCol);
-			} else if (zeroCol == N-1) {
-				// N-1, N-1
-				b1.switchLeft(zeroLine, zeroCol);
-				b2.switchTop(zeroLine, zeroCol);
-			} else {
-				// N-1, X
-				Board b3 = this.clone();
-				b1.switchLeft(zeroLine, zeroCol);
-				b2.switchRight(zeroLine, zeroCol);
-				b3.switchTop(zeroLine, zeroCol);
-				returnList.add(b3);
-			}
+			// si on est sur la ligne du bas
+			Board b = this.clone();
+			b.switchTop(zeroLine, zeroCol);
+			returnList.add(b);
 		} else {
-			Board b3 = this.clone();
-			if(zeroCol == 0) {
-				// X, 0
-				b1.switchRight(zeroLine, zeroCol);
-				b2.switchBottom(zeroLine, zeroCol);
-				b3.switchTop(zeroLine, zeroCol);
-			} else if (zeroCol == N-1) {
-				// X, N-1
-				b1.switchLeft(zeroLine, zeroCol);
-				b2.switchBottom(zeroLine, zeroCol);
-				b3.switchTop(zeroLine, zeroCol);
-			} else {
-				// X, X
-				Board b4 = this.clone();
-				b1.switchLeft(zeroLine, zeroCol);
-				b2.switchRight(zeroLine, zeroCol);
-				b3.switchBottom(zeroLine, zeroCol);
-				b4.switchTop(zeroLine, zeroCol);
-				returnList.add(b4);
-			}
-			returnList.add(b3);
+			// sinon on est sur une ligne au milieu de la matrice
+			Board b1 = this.clone();
+			Board b2 = this.clone();
+			b1.switchTop(zeroLine, zeroCol);
+			b2.switchBottom(zeroLine, zeroCol);
+			returnList.add(b1);
+			returnList.add(b2);
 		}
-		returnList.add(b1);
-		returnList.add(b2);
+		// idem au dessus mais avec les colones
+		if(zeroCol == 0) {
+			Board b = this.clone();
+			b.switchRight(zeroLine, zeroCol);
+			returnList.add(b);
+		} else if(zeroCol == N-1) {
+			Board b = this.clone();
+			b.switchLeft(zeroLine, zeroCol);
+			returnList.add(b);
+		} else {
+			Board b1 = this.clone();
+			Board b2 = this.clone();
+			b1.switchLeft(zeroLine, zeroCol);
+			b2.switchRight(zeroLine, zeroCol);
+			returnList.add(b1);
+			returnList.add(b2);
+		}
         return returnList;
     }
 	
