@@ -4,6 +4,8 @@ import java.util.Arrays;
 public class Board implements Cloneable {
 	private int[][] blocks;
 	private int N;
+	private int zeroLine;
+	private int zeroCol;
 	
     public Board(int[][] blocks) {
     	this.N = blocks.length;
@@ -11,6 +13,10 @@ public class Board implements Cloneable {
     	for(int i = 0; i < this.N; i++) {
     		for(int j = 0; j < this.N; j++) {
     			this.blocks[i][j] = blocks[i][j];
+    			if (blocks[i][j] == 0) {
+    				this.zeroLine = i;
+    				this.zeroCol = j;
+    			}
     		}
     	}
     }
@@ -84,16 +90,16 @@ public class Board implements Cloneable {
     	}
         return new Board(newBlocks);
     }
-
 	@Override
 	public int hashCode() {
-		final int prime = 2147483647;
+		final int prime = 31;
 		int result = 1;
 		result = prime * result + N;
 		result = prime * result + Arrays.deepHashCode(blocks);
+		result = prime * result + zeroCol;
+		result = prime * result + zeroLine;
 		return result;
 	}
-
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -107,23 +113,15 @@ public class Board implements Cloneable {
 			return false;
 		if (!Arrays.deepEquals(blocks, other.blocks))
 			return false;
+		if (zeroCol != other.zeroCol)
+			return false;
+		if (zeroLine != other.zeroLine)
+			return false;
 		return true;
 	}
 
 	public Iterable<Board> neighbors() {
 		ArrayList<Board> returnList = new ArrayList<Board>();
-		int zeroLine = 0;
-		int zeroCol = 0;
-		boolean find = false;
-		for(int i = 0; i < this.N && !find; i++) {
-    		for(int j = 0; j < this.N && !find; j++) {
-    			if (this.blocks[i][j] == 0) {
-    				zeroLine = i;
-    				zeroCol = j;
-    				find = true;
-    			}
-    		}
-    	}
 		if(zeroLine == 0){
 			// si on est sur la ligne du haut
 			Board b = this.clone();
@@ -168,24 +166,28 @@ public class Board implements Cloneable {
 		int temp = this.blocks[line][col];
 		this.blocks[line][col] = this.blocks[line][col-1];
 		this.blocks[line][col-1] = temp;
+		this.zeroCol--;
 	}
 	
 	private void switchRight(int line, int col) {
 		int temp = this.blocks[line][col];
 		this.blocks[line][col] = this.blocks[line][col+1];
 		this.blocks[line][col+1] = temp;
+		this.zeroCol++;
 	}
 	
 	private void switchTop(int line, int col) {
 		int temp = this.blocks[line][col];
 		this.blocks[line][col] = this.blocks[line-1][col];
 		this.blocks[line-1][col] = temp;
+		this.zeroLine--;
 	}
 	
 	private void switchBottom(int line, int col) {
 		int temp = this.blocks[line][col];
 		this.blocks[line][col] = this.blocks[line+1][col];
 		this.blocks[line+1][col] = temp;
+		this.zeroLine++;
 	}
 
     public String toString() {

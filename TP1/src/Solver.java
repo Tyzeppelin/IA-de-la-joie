@@ -38,6 +38,11 @@ public class Solver {
         public int compareTo(SearchNode searchNode) {
             return this.getPriority() - searchNode.getPriority();
         }
+
+		@Override
+		public boolean equals(Object obj) {
+			return this.node.equals(node);
+		}
     }
 
     public Solver(Board initial) {
@@ -94,9 +99,14 @@ public class Solver {
             StdOut.println("No solution possible");
         else {
             StdOut.println("Minimum number of moves = " + solver.moves());
+            long startTime = System.nanoTime();
+           
             for (Board board : solver.solution()){
                 StdOut.println(board);
             }
+            long endTime = System.nanoTime();
+            long duration = (endTime - startTime);
+            System.out.println("duration time: " + duration / 1000000);
         }
     }
 }
