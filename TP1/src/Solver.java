@@ -1,28 +1,79 @@
+import java.util.LinkedList;
+import java.util.PriorityQueue;
+
 public class Solver {
+	
+	private PriorityQueue<SearchNode> morpheus;
 
     private static class SearchNode implements Comparable<SearchNode> {
-        @Override
+    	private Board node;
+    	private SearchNode vader;
+    	private int distance;
+		private int manhattanKaboul;
+    	public SearchNode(Board node, SearchNode pere, int distance) {
+			super();
+			this.node = node;
+			this.vader = pere;
+			this.distance = distance;
+			this.manhattanKaboul = node.manhattan();
+		}
+    	
+    	public SearchNode getFather() {
+    		return this.vader;
+    	}
+    	
+    	private int getPriority() {
+    		return this.distance + this.manhattanKaboul;
+    	}
+    	
+    	public boolean isFinish() {
+    		return this.manhattanKaboul == 0;
+    	}
+    	
+    	public Iterable<Board> getNeighbors() {
+    		return this.node.neighbors();
+    	}
+    	
+		@Override
         public int compareTo(SearchNode searchNode) {
-            return 0;
+            return this.getPriority() - searchNode.getPriority();
         }
     }
 
     public Solver(Board initial) {
+    	morpheus = new PriorityQueue<SearchNode>();
+    	morpheus.add(new SearchNode(initial, null, 0));
     }
 
     private void aStar() {
+    	while (!morpheus.peek().isFinish()){
+    		SearchNode vader = morpheus.poll();
+    		int dis = vader.distance;
+    		for (Board neigh: vader.getNeighbors()) {
+    			if (!morpheus.contains(neigh)) {
+    				morpheus.add(new SearchNode(neigh, vader,  dis+1));
+    			}
+    		}
+    	}
     }
 
     public boolean isSolvable() {
-        return false;
+        return true;
     }
 
     public int moves() {
-	return -1;
+    	return morpheus.peek().node.manhattan();
     }
 
     public Iterable<Board> solution() {
-        return null;
+    	aStar();
+    	LinkedList<Board> anakin = new LinkedList<Board>();
+    	SearchNode aqueuse = morpheus.peek();
+    	while(aqueuse.getFather() != null) {
+    		anakin.addFirst(aqueuse.node);
+    		aqueuse = aqueuse.getFather();
+    	}
+    	return anakin;
     }
 
     public static void main(String[] args) {
@@ -43,8 +94,9 @@ public class Solver {
             StdOut.println("No solution possible");
         else {
             StdOut.println("Minimum number of moves = " + solver.moves());
-            for (Board board : solver.solution())
+            for (Board board : solver.solution()){
                 StdOut.println(board);
+            }
         }
     }
 }

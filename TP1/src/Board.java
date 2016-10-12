@@ -63,7 +63,7 @@ public class Board implements Cloneable {
     }
 
     public boolean isGoal() {
-        return this.hamming() == 0;
+        return this.manhattan() == 0;
     }
 
     public Board twin() {
@@ -160,31 +160,32 @@ public class Board implements Cloneable {
 			returnList.add(b1);
 			returnList.add(b2);
 		}
+		returnList.trimToSize();
         return returnList;
     }
 	
 	private void switchLeft(int line, int col) {
 		int temp = this.blocks[line][col];
-		this.blocks[line][col] = this.blocks[line-1][col];
-		this.blocks[line-1][col] = temp;
-	}
-	
-	private void switchRight(int line, int col) {
-		int temp = this.blocks[line][col];
-		this.blocks[line][col] = this.blocks[line+1][col];
-		this.blocks[line+1][col] = temp;
-	}
-	
-	private void switchTop(int line, int col) {
-		int temp = this.blocks[line][col];
 		this.blocks[line][col] = this.blocks[line][col-1];
 		this.blocks[line][col-1] = temp;
 	}
 	
-	private void switchBottom(int line, int col) {
+	private void switchRight(int line, int col) {
 		int temp = this.blocks[line][col];
 		this.blocks[line][col] = this.blocks[line][col+1];
 		this.blocks[line][col+1] = temp;
+	}
+	
+	private void switchTop(int line, int col) {
+		int temp = this.blocks[line][col];
+		this.blocks[line][col] = this.blocks[line-1][col];
+		this.blocks[line-1][col] = temp;
+	}
+	
+	private void switchBottom(int line, int col) {
+		int temp = this.blocks[line][col];
+		this.blocks[line][col] = this.blocks[line+1][col];
+		this.blocks[line+1][col] = temp;
 	}
 
     public String toString() {
