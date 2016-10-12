@@ -55,7 +55,7 @@ public class Solver {
     		SearchNode vader = morpheus.poll();
     		int dis = vader.distance;
     		for (Board neigh: vader.getNeighbors()) {
-    			if (!morpheus.contains(neigh)) {
+    			if (vader.vader == null || !neigh.equals(vader.vader.node)) {
     				morpheus.add(new SearchNode(neigh, vader,  dis+1));
     			}
     		}
